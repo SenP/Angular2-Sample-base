@@ -1,0 +1,69 @@
+<div>
+	<h1>
+	    <span> Posts </span>
+    </h1>
+</div>
+
+<div *ngIf="isLoading" class="text-info">
+	Loading Posts...
+	<spinner [visible]="isLoading"></spinner>
+</div>
+
+<div class="row">
+
+	<!--Posts List-->
+	<div *ngIf="!isLoading" class="col-md-6 posts">
+		<!--Select User-->
+		<select class="form-control" id="byUser" #byuser (change)="changeUser(byuser.value)">
+			<option>Select a user...</option>
+			<option *ngFor="#user of usersList" [value]="user.id">{{ user.name }} </option>						
+		</select>
+		<!--End Select User-->
+
+		<br>
+		<!--Start Pagination-->
+		<div>
+			<pagination [items]="postsList | filterByVal: {userId: activeUserId}"
+					[page-size]="pageSize" (pageChanged)="changePage($event);">
+			</pagination>
+		</div>
+		<br>	
+		<!--End Pagination-->
+		<!-- " | filterByIndex: pageStart : pageEnd" -->
+		<ul class="list-group">
+			<li *ngFor="#post of currentPagePosts" 
+					class="list-group-item" [class.active]="activePost == post"
+					(click)="selectPost(post)">{{ post.title }} ( {{post.id }} )</li>
+		</ul>
+
+	</div>
+	<!-- End Posts List-->
+
+	<!--Post details-->
+	<div *ngIf="activePost.title" class="col-md-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">{{ activePost.title }}</h3>
+			</div>
+			<div class="panel-body">
+				{{ activePost.body }}
+			</div>
+
+			<hr>
+			<!-- Comments-->
+			<div *ngIf="isLoadingComments" class="text-info">
+				Loading Comments...
+				<spinner [visible]="isLoadingComments"></spinner>
+			</div>
+			<div *ngIf="!isLoadingComments && activePost.comments.length > 0">
+				<post-comment [comment]="comment" *ngFor="#comment of activePost.comments"></post-comment>
+			</div>
+			<!--End Comments-->
+		</div>
+	</div>
+	<!--End Post details-->
+</div>
+
+<div *ngIf="isDeleting" class="alert alert-info">
+	Deleting Post...
+</div>

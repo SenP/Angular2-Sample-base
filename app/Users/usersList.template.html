@@ -1,0 +1,46 @@
+<div>
+	<h1>
+	    <span> Users </span>
+	    <span><a class="btn btn-primary pull-right" [routerLink]="['UsersCreate']"> Add User </a></span>
+    </h1>
+</div>
+
+<div *ngIf="isLoading" class="text-info">
+	Loading Users...
+	<spinner [visible]="isLoading"></spinner>
+</div>
+
+<div class="row">
+	<div *ngIf="!isLoading">
+
+		<table class="table table-bordered table-striped table-hover">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email</th>
+					<th>Edit</th>
+					<th>Delete</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr *ngFor="#user of usersList">
+					<td>{{ user.username }}</td>
+					<td>{{ user.email }}</td>
+					<td>
+						<a [routerLink]="['UsersEdit', {id: user.id}]"> <span class=" glyphicon glyphicon-edit"></span></a>
+					</td>
+					<td>
+						<a *ngIf="!isDeleting" (click)="onRemove(user)"> <span class="glyphicon glyphicon-remove"></span></a>
+					</td>
+				</tr>
+			</tbody>
+
+		</table>
+	</div>
+	<div *ngIf="isDeleting" class="text-info">
+		Deleting User...
+		<spinner [visible]="isDeleting"></spinner>
+	</div>
+
+</div>
